@@ -113,3 +113,20 @@ server {
         }
 }
 
+server {
+        listen 5678 default_server;
+        listen [::]:5678 default_server;
+        server_name _;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                proxy_pass http://172.17.0.1:5678;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                #try_files $uri $uri/ =404;
+        }
+}
+
